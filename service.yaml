@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations: 
+    external-dns.alpha.kubernetes.io/aws-zone-type-public: "true"
+    external-dns.alpha.kubernetes.io/ttl: "60"
+    external-dns.alpha.kubernetes.io/hostname: locust.aws-us-east-1.sdu-ops.sdu-rds.com.
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http    
+  labels:
+    role: locust-master
+  name: locust-master
+spec:
+  ports:
+  - port: 5557
+    name: communication
+  - port: 5558
+    name: communication-plus-1
+  - port: 8089
+    targetPort: 8089
+    name: web-ui
+  selector:
+    role: locust-master
+  type: LoadBalancer
