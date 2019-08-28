@@ -22,7 +22,7 @@ spec:
         role: locust-master
     spec:
       containers:
-      - image: grubykarol/locust:0.8.1-py3.6
+      - image: grubykarol/ci-experiment:0.0.1
         imagePullPolicy: IfNotPresent
         name: locust-master
         env:
@@ -34,17 +34,12 @@ spec:
           - name: LOCUST_MODE
             value: MASTER
           - name: LOCUST_OPTS
-            value: --print-stats
-        volumeMounts:
-          - mountPath: /locust
-            name: locust-scripts
+            value: --no-web --expect-slaves 1 -c 1 -r 1 -t 30s --csv=example"
         ports:
         - containerPort: 5557
           name: comm
         - containerPort: 5558
           name: comm-plus-1
-        - containerPort: 8089
-          name: web-ui
         resources: {}
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
@@ -53,7 +48,3 @@ spec:
       schedulerName: default-scheduler
       securityContext: {}
       terminationGracePeriodSeconds: 30
-      volumes:
-      - name: locust-scripts
-        configMap:
-          name: scripts-cm
